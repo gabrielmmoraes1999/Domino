@@ -576,6 +576,16 @@ public final class InternaConversao extends javax.swing.JInternalFrame {
                 s.gravarArquivo(ldDAO.retornaLancamentosPreparados(lDAO.dePara(realizarDeParaEmpregado)), arquivo);
             }
             
+            EmpregadoDAO eDAO = new EmpregadoDAO();
+            
+            //Melhorar esta Função, pois foi um paleativo
+            try {
+                ArrayList<String> linhas = ldDAO.removerEstagiarios(arquivo, eDAO.carregarPorConversaoFiltroEstagiarios(Config.conversao.getId()));
+                s.gravarArquivo(linhas, arquivo);
+            } catch (IOException ex) {
+                new TelaErro(3, ex.getStackTrace()).setVisible(true);
+            }
+            
             iap.dispose();
             JOptionPane.showMessageDialog(InternaConversao.this, "Converção realizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         }
