@@ -43,6 +43,7 @@ public class RubricaConfiguracaoDAO {
                 pstm.execute();
             }
             
+            Firebird.conn.commit();
             fb.disconnect();
         } catch (Exception ex) {
             new TelaErro(1, ex.getStackTrace()).setVisible(true);
@@ -155,6 +156,7 @@ public class RubricaConfiguracaoDAO {
             pstm.setBoolean(14, rc.isSalarioMedias());
             pstm.setInt(15, rc.getId());
             pstm.execute();
+            Firebird.conn.commit();
             fb.disconnect();
         } catch (Exception ex) {
             new TelaErro(1, ex.getStackTrace()).setVisible(true);
@@ -185,6 +187,7 @@ public class RubricaConfiguracaoDAO {
             pstm.setInt(14, rc.getConversao().getId());
             pstm.setBoolean(15, rc.isHoras());
             pstm.execute();
+            Firebird.conn.commit();
             fb.disconnect();
         } catch (Exception ex) {
             new TelaErro(1, ex.getStackTrace()).setVisible(true);
@@ -258,6 +261,7 @@ public class RubricaConfiguracaoDAO {
             PreparedStatement pstm = Firebird.conn.prepareStatement(sql);
             pstm.setInt(1, idConversao);
             pstm.execute();
+            Firebird.conn.commit();
             fb.disconnect();
         } catch (Exception ex) {
             new TelaErro(1, ex.getStackTrace()).setVisible(true);

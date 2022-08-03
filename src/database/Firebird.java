@@ -2,6 +2,8 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
+import view.TelaErro;
 
 /**
  *
@@ -18,12 +20,16 @@ public class Firebird {
         String senha = "masterkey";
         Class.forName("org.firebirdsql.jdbc.FBDriver").newInstance();
         conn = DriverManager.getConnection(url, usuario, senha);
+        conn.setAutoCommit(false);
     }
     
-    public void disconnect() throws Exception{
-        //conn.commit();
-        if(!conn.isClosed()){
-            conn.close();
+    public void disconnect() {
+        try {
+            if(!conn.isClosed()){
+                conn.close();
+            }
+        } catch (SQLException ex) {
+            new TelaErro(9, ex.getStackTrace()).setVisible(true);
         }
     }
 }

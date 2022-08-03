@@ -30,6 +30,7 @@ public class LancamentoDAO {
                 pstm.execute();
             }
             
+            Firebird.conn.commit();
             fb.disconnect();
         } catch (Exception ex) {
             new TelaErro(1, ex.getStackTrace()).setVisible(true);
@@ -93,6 +94,7 @@ public class LancamentoDAO {
             PreparedStatement pstm = Firebird.conn.prepareStatement(sql);
             pstm.setInt(1, idConversao);
             pstm.execute();
+            Firebird.conn.commit();
             fb.disconnect();
         } catch (Exception ex) {
             new TelaErro(1, ex.getStackTrace()).setVisible(true);

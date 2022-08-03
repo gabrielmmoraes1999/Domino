@@ -123,6 +123,8 @@ public class InternaAplicaSQL extends javax.swing.JInternalFrame {
                 PreparedStatement pstm = Firebird.conn.prepareStatement(sql.substring(matcher.start(), matcher.end()));
                 pstm.execute();
             }
+            
+            Firebird.conn.commit();
             fb.disconnect();
             JOptionPane.showMessageDialog(this, "Comando SQL aplicado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {

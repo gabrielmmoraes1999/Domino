@@ -26,6 +26,7 @@ public class ConversaoDAO {
             pstm.setString(6, c.getUsuario());
             pstm.setString(7, c.getSenha());
             pstm.execute();
+            Firebird.conn.commit();
             fb.disconnect();
             ultimoID = retornaUltimoID();
         } catch (Exception ex) {
@@ -141,6 +142,7 @@ public class ConversaoDAO {
             PreparedStatement pstm = Firebird.conn.prepareStatement(sql);
             pstm.setInt(1, idConversao);
             pstm.execute();
+            Firebird.conn.commit();
             fb.disconnect();
         } catch (Exception ex) {
             new TelaErro(1, ex.getStackTrace()).setVisible(true);

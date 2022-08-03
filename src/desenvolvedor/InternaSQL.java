@@ -103,6 +103,7 @@ public class InternaSQL extends javax.swing.JInternalFrame {
                 pstm.execute();
             }
             
+            Firebird.conn.commit();
             fb.disconnect();
             JOptionPane.showMessageDialog(this, "SQL aplicado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {

@@ -5,8 +5,13 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Savepoint;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -44,9 +49,12 @@ public final class InternaAtualizacaoBanco extends javax.swing.JInternalFrame {
         int versaoAtual = vbDAO.retornaVersaoAtualBanco();
         Pattern pattern = Pattern.compile("([^;])+");
         
+        Savepoint sp = null;
+        Firebird fb = new Firebird();
+        
         try {
-            Firebird fb = new Firebird();
             fb.connect();
+            Statement stmt = Firebird.conn.createStatement();
             
             while(versaoAtual < Config.versaoBancoDados) {
                 File diretorio = new File(System.getProperty("user.dir"));
@@ -58,10 +66,15 @@ public final class InternaAtualizacaoBanco extends javax.swing.JInternalFrame {
                         Matcher matcher = pattern.matcher(sql);
                         
                         while(matcher.find()) {
-                            PreparedStatement pstm = Firebird.conn.prepareStatement(sql.substring(matcher.start(), matcher.end()));
-                            pstm.execute();
+                            String sqlSeparado = sql.substring(matcher.start(), matcher.end());
+                            stmt.execute(sqlSeparado);
+                            
+                            if(sqlSeparado.contains("CREATE TABLE")) {
+                                Firebird.conn.commit();
+                            }
                         }
                         
+                        sp = Firebird.conn.setSavepoint();
                         break;
                     }
                 }
@@ -69,10 +82,29 @@ public final class InternaAtualizacaoBanco extends javax.swing.JInternalFrame {
                 versaoAtual++;
             }
             
-            fb.disconnect();
+            Firebird.conn.commit();
+        } catch (SQLException ex) {
+            try {
+                Firebird.conn.rollback(sp);
+                Firebird.conn.commit();
+                JOptionPane.showMessageDialog(null, "Ocorreu um erro durante a atualização do banco de dados!"
+                        + "\nRollback foi aplicado!", "Rollback!", JOptionPane.WARNING_MESSAGE);
+                System.exit(0);
+            } catch (SQLException ex1) {
+                if(sp != null) {
+                    JOptionPane.showMessageDialog(null, "Ocorreu um erro durante a atualização do banco de dados!"
+                            + "\nNão foi possível realizar o Rollback!\nPor favor, restaure o último backup.", "Falha Crítica!", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Ocorreu um erro durante a atualização do banco de dados!"
+                        + "\nAs modificações não foram aplicadas!", "Erro!", JOptionPane.ERROR_MESSAGE);
+                }
+                System.exit(0);
+            }
         } catch (Exception ex) {
-            new TelaErro(1, ex.getStackTrace()).setVisible(true);
+            new TelaErro(this, 1, ex.getStackTrace()).setVisible(true);
         }
+        
+        fb.disconnect();
         
         JOptionPane.showMessageDialog(this, "Atualização realizada com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
         dispose();

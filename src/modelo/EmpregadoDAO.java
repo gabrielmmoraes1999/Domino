@@ -31,6 +31,7 @@ public class EmpregadoDAO {
                 pstm.execute();
             }
             
+            Firebird.conn.commit();
             fb.disconnect();
         } catch (Exception ex) {
             new TelaErro(1, ex.getStackTrace()).setVisible(true);
@@ -124,6 +125,7 @@ public class EmpregadoDAO {
                 pstm.execute();
             }
             
+            Firebird.conn.commit();
             fb.disconnect();
         } catch (Exception ex) {
             new TelaErro(1, ex.getStackTrace()).setVisible(true);
@@ -166,6 +168,7 @@ public class EmpregadoDAO {
             PreparedStatement pstm = Firebird.conn.prepareStatement(sql);
             pstm.setInt(1, idConversao);
             pstm.execute();
+            Firebird.conn.commit();
             fb.disconnect();
         } catch (Exception ex) {
             new TelaErro(1, ex.getStackTrace()).setVisible(true);
