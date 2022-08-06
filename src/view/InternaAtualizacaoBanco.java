@@ -260,6 +260,7 @@ public final class InternaAtualizacaoBanco extends javax.swing.JInternalFrame {
         Timestamp ts = new Timestamp(new Date().getTime());
         b.setData(ts);
         bDAO.inserir(b);
+        JOptionPane.showMessageDialog(this, "Backup realizado com sucesso!","Sucesso!", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jButton3ActionPerformed
 
 
