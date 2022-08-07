@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Component;
 import util.Config;
 import static util.Config.visual;
 
@@ -11,8 +12,63 @@ public class TelaErro extends javax.swing.JFrame {
     
     static int id;
     static StackTraceElement[] st;
-
+    
     public TelaErro(int id, StackTraceElement[] st) {
+        initComponents();
+        jTextField1.setText(String.valueOf(id));
+        switch(id) {
+            case 1:
+                jTextField2.setText("Exception");
+                break;
+            case 2:
+                jTextField2.setText("FileNotFoundException");
+                break;
+            case 3:
+                jTextField2.setText("IOException");
+                break;
+            case 4:
+                jTextField2.setText("InterruptedException");
+                break;
+            case 5:
+                jTextField2.setText("BiffException");
+                break;
+            case 6:
+                jTextField2.setText("UnsupportedEncodingException");
+                break;
+            case 7:
+                jTextField2.setText("ParseException");
+                break;
+            case 8:
+                jTextField2.setText("URISyntaxException");
+                break;
+            case 9:
+                jTextField2.setText("SQLException");
+                break;
+            case 10:
+                jTextField2.setText("Throwable");
+                break;
+            case 11:
+                jTextField2.setText("MalformedURLException");
+                break;
+            case 12:
+                jTextField2.setText("ParserConfigurationException");
+                break;
+            case 13:
+                jTextField2.setText("SAXException");
+                break;
+        }
+        String texto = "";
+        for(StackTraceElement s : st) {
+            texto = texto + "Classe: "+s.getClassName()+"\n"
+                    + "File: "+s.getFileName()+"("+s.getLineNumber()+")\n"
+                    + "MethodName: "+s.getMethodName();
+        }
+        
+        jTextArea1.setText(texto);
+        setIconImage(new Config().getIcon());
+    }
+
+    public TelaErro(Component parentComponentint, int id, StackTraceElement[] st) {
         initComponents();
         jTextField1.setText(String.valueOf(id));
         switch(id) {

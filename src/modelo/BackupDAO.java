@@ -19,6 +19,7 @@ public class BackupDAO {
             PreparedStatement pstm = Firebird.conn.prepareStatement(sql);
             pstm.setTimestamp(1, b.getData());
             pstm.execute();
+            Firebird.conn.commit();
             fb.disconnect();
         } catch (Exception ex) {
             new TelaErro(1, ex.getStackTrace()).setVisible(true);
