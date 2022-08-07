@@ -15,9 +15,9 @@ import modelo.User;
  */
 public class Config {
     //Variaveis de Atualização
-    public static String ver = "4.1";
-    public static int codPublic = 14;
-    public static int versaoBancoDados = 12;
+    public static String ver = "4.2";
+    public static int codPublic = 15;
+    public static int versaoBancoDados = 13;
     //Fim
     
     //Servidor
