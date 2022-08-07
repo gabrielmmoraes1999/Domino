@@ -16,7 +16,7 @@ import view.TelaErro;
 public class EmpregadoDAO {
     public void inserir(ArrayList<Empregado> empregados, int idConversao) {
         try {
-            String sql = "INSERT INTO empregado (id_conversao, cod_empresa, codigo, cod_esocial, nome, cpf) VALUES(?,?,?,?,?,?)";
+            String sql = "INSERT INTO empregado (id_conversao, cod_empresa, codigo, cod_esocial, nome, cpf, vinculo) VALUES(?,?,?,?,?,?,?)";
             Firebird fb = new Firebird();
             fb.connect();
             PreparedStatement pstm = Firebird.conn.prepareStatement(sql);
@@ -28,6 +28,7 @@ public class EmpregadoDAO {
                 pstm.setString(4, e.getCodEsocial());
                 pstm.setString(5, e.getNome());
                 pstm.setString(6, e.getCpf());
+                pstm.setInt(7, e.getVinculo());
                 pstm.execute();
             }
             
@@ -56,6 +57,35 @@ public class EmpregadoDAO {
                 e.setCodEsocial(rs.getString("cod_esocial"));
                 e.setNome(rs.getString("nome"));
                 e.setCpf(rs.getString("cpf"));
+                e.setVinculo(rs.getInt("vinculo"));
+                empregados.add(e);
+            }
+            fb.disconnect();
+        } catch (Exception ex) {
+            new TelaErro(1, ex.getStackTrace()).setVisible(true);
+        }
+        return empregados;
+    }
+    
+    public ArrayList<Empregado> carregarPorConversaoFiltroEstagiarios(int idConversao) {
+        ArrayList<Empregado> empregados = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM empregado WHERE id_conversao = ? AND (vinculo is null OR vinculo <> 50) ORDER BY id ASC";
+            Firebird fb = new Firebird();
+            fb.connect();
+            PreparedStatement pstm = Firebird.conn.prepareStatement(sql);
+            pstm.setInt(1, idConversao);
+            ResultSet rs = pstm.executeQuery();
+            
+            while (rs.next()) {
+                Empregado e = new Empregado();
+                e.setId(rs.getInt("id"));
+                e.setCodEmpresa(rs.getInt("cod_empresa"));
+                e.setCodigo(rs.getInt("codigo"));
+                e.setCodEsocial(rs.getString("cod_esocial"));
+                e.setNome(rs.getString("nome"));
+                e.setCpf(rs.getString("cpf"));
+                e.setVinculo(rs.getInt("vinculo"));
                 empregados.add(e);
             }
             fb.disconnect();
@@ -148,6 +178,7 @@ public class EmpregadoDAO {
                     ee.setCodEsocial(codeSocial);
                     ee.setNome(rs.getString("nome"));
                     ee.setCpf(rs.getString("cpf"));
+                    ee.setVinculo(rs.getInt("vinculo"));
                     if(codeSocial != null){
                         empregados.add(ee);
                     }

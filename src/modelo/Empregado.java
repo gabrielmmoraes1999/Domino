@@ -12,6 +12,7 @@ public class Empregado {
     private String codEsocial;
     private String nome;
     private String cpf;
+    private int vinculo;
 
     public int getId() {
         return id;
@@ -67,5 +68,13 @@ public class Empregado {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public int getVinculo() {
+        return vinculo;
+    }
+
+    public void setVinculo(int vinculo) {
+        this.vinculo = vinculo;
     }
 }
